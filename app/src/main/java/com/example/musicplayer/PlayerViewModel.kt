@@ -382,7 +382,8 @@ class PlayerViewModel(private val app: Application) : AndroidViewModel(app) {
                             origName.isNotBlank() -> origName
                             title.isNotBlank() -> "$performer - $title.mp3"
                             else -> "track_${System.currentTimeMillis()}.mp3"
-                        }.replace(Regex("[\\/:*?"<>|]"), "_")
+                        }val baseName = origName.ifBlank { "$performer - $title.mp3" }
+    .replace("'", "").replace("\"", "").replace("/", "_").replace("\\", "_").replace(":", "_")
 
                         withContext(Dispatchers.Main) {
                             syncStatus.value = "Скачивание: $baseName..."
