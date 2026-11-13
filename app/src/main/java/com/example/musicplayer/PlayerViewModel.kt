@@ -378,11 +378,9 @@ class PlayerViewModel(private val app: Application) : AndroidViewModel(app) {
                         val title = audioObj.optString("title", "")
                         val origName = audioObj.optString("file_name", "")
 
-                        val baseName = when {
-                            origName.isNotBlank() -> origName
-                            title.isNotBlank() -> "$performer - $title.mp3"
-                            else -> "track_${System.currentTimeMillis()}.mp3"
-                        }val baseName = origName.ifBlank { "$performer - $title.mp3" }
+                       val rawName = if (origName.isNotBlank()) origName else if (title.isNotBlank()) "$performer - $title.mp3" else "track_${System.currentTimeMillis()}.mp3"
+val baseName = rawName.replace("[\\\\/:*?\"<>|]".toRegex(), "_")
+                        val baseName = origName.ifBlank { "$performer - $title.mp3" }
     .replace("'", "").replace("\"", "").replace("/", "_").replace("\\", "_").replace(":", "_")
 
                         withContext(Dispatchers.Main) {
